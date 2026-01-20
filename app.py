@@ -31,7 +31,7 @@ def discord_preview(prompt):
         </head>
         <body>
             <h1>Processing: {clean_display}</h1>
-            <p>If you see a poop emoji in Discord, try a new link with a different prompt.</p>
+            <p>If you see a grey poop emoji in Discord, try a new link with a different prompt.</p>
         </body>
     </html>
     '''
