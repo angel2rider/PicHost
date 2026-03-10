@@ -2,16 +2,10 @@ name = "pichost-backend"
 main = "worker.js"
 compatibility_date = "2026-03-10"
 
-# plaintext variable (user enters value during deploy)
 [vars]
-TELEGRAM_CHAT_ID = "your_telegram_chat_id"
+TELEGRAM_BOT_TOKEN = "your_bot_token_here"
+TELEGRAM_CHAT_ID = "your_telegram_chat_id_here"
 
-# KV namespace creation + binding
 [[kv_namespaces]]
 binding = "IMG_KV"
 id = "IMG_KV"
-
-# secret prompt during deploy
-[[unsafe.bindings]]
-name = "TELEGRAM_BOT_TOKEN"
-type = "secret_text"
