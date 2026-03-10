@@ -108,8 +108,8 @@ You can deploy the backend in two ways.
 This will automatically:
 
 * Deploy the `worker.js` backend
-* Change your **Telegram Bot Token**
-* Change your **Telegram Chat ID**
+* Ask your **Telegram Bot Token**
+* Ask your **Telegram Chat ID**
 * Create and bind the **IMG_KV** namespace
 
 Click below and follow the prompts:
