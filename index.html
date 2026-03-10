@@ -7,102 +7,173 @@
     
     <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Tailwind Config & Theming Engine -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: 'rgb(var(--brand-50) / <alpha-value>)',
-                            100: 'rgb(var(--brand-100) / <alpha-value>)',
-                            500: 'rgb(var(--brand-500) / <alpha-value>)',
-                            600: 'rgb(var(--brand-600) / <alpha-value>)',
-                            700: 'rgb(var(--brand-700) / <alpha-value>)',
-                            900: 'rgb(var(--brand-900) / <alpha-value>)',
-                        }
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'slide-in-toast': 'slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                    },
-                    keyframes: {
-                        fadeInUp: { '0%': { opacity: 0, transform: 'translateY(15px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
-                        slideInToast: { '0%': { opacity: 0, transform: 'translate(-50%, -20px)' }, '100%': { opacity: 1, transform: 'translate(-50%, 0)' } }
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
+        /* =========================================================
+           PURE CSS THEME ENGINE (1:1 Match with your Tailwind Code)
+           ========================================================= */
         :root {
-            --brand-50: 239 246 255; --brand-100: 219 234 254; --brand-500: 59 130 246; 
-            --brand-600: 37 99 235; --brand-700: 29 78 216; --brand-900: 30 58 138;
+            --brand-rgb: 59, 130, 246; /* Blue Default */
+            --bg: #f9fafb;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --text-muted: #6b7280;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
-        body[data-theme="emerald"] {
-            --brand-50: 236 253 245; --brand-100: 209 250 229; --brand-500: 16 185 129; 
-            --brand-600: 5 150 105; --brand-700: 4 120 87; --brand-900: 6 78 59;
-        }
-        body[data-theme="violet"] {
-            --brand-50: 245 243 255; --brand-100: 237 233 254; --brand-500: 139 92 246; 
-            --brand-600: 124 58 237; --brand-700: 109 40 217; --brand-900: 76 29 149;
-        }
-        body[data-theme="rose"] {
-            --brand-50: 255 241 242; --brand-100: 255 228 230; --brand-500: 244 63 94; 
-            --brand-600: 225 29 72; --brand-700: 190 18 60; --brand-900: 136 19 55;
+        
+        html.dark {
+            --bg: #030712;
+            --surface: #111827;
+            --border: #1f2937;
+            --text: #f9fafb;
+            --text-muted: #9ca3af;
         }
 
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .dark .glass { background: rgba(17, 24, 39, 0.85); }
-        #toast.show { animation: slideInToast 0.3s forwards; display: flex; }
-        .tab-content { transition: opacity 0.3s ease, transform 0.3s ease; }
+        /* Color Themes */
+        body[data-theme="emerald"] { --brand-rgb: 16, 185, 129; }
+        body[data-theme="violet"] { --brand-rgb: 139, 92, 246; }
+        body[data-theme="rose"] { --brand-rgb: 244, 63, 94; }
+
+        /* Resets & Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.3s, color 0.3s; -webkit-font-smoothing: antialiased; }
         
-        .skeleton-loader {
-            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
-            background-size: 200% 100%; animation: loading 1.5s infinite;
-        }
-        .dark .skeleton-loader { background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%); }
-        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        /* Utilities */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .animate-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navbar */
+        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: 4rem; }
+        html.dark .navbar { background: rgba(17, 24, 39, 0.85); }
+        .nav-container { max-width: 80rem; margin: 0 auto; padding: 0 1rem; height: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { display: flex; align-items: center; gap: 0.5rem; color: rgb(var(--brand-rgb)); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.025em; }
+
+        /* Buttons & Inputs */
+        .btn-icon { padding: 0.5rem; color: var(--text-muted); border-radius: 9999px; background: transparent; border: none; cursor: pointer; display: flex; align-items: center; transition: 0.2s; }
+        .btn-icon:hover { background: var(--border); color: var(--text); }
+        .btn-primary { width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; color: #fff; background-color: rgb(var(--brand-rgb)); border: none; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { filter: brightness(0.9); }
+        
+        .input-wrapper { position: relative; margin-bottom: 1rem; }
+        .input-icon { position: absolute; left: 0; top: 0; bottom: 0; padding-left: 0.75rem; display: flex; align-items: center; color: var(--text-muted); pointer-events: none; }
+        .input-field { width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; border: 1px solid var(--border); border-radius: 0.75rem; background-color: var(--surface); color: var(--text); font-size: 0.875rem; outline: none; transition: 0.2s; }
+        .input-field:focus { border-color: rgb(var(--brand-rgb)); box-shadow: 0 0 0 2px rgba(var(--brand-rgb), 0.2); }
+
+        /* Main Container & Cards */
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; width: 100%; max-width: 80rem; margin: 0 auto; padding: 2rem 1rem; }
+        .card { background-color: var(--surface); border-radius: 1rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border); overflow: hidden; }
+        
+        /* Auth Page */
+        .auth-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; animation: fadeInUp 0.4s ease forwards; }
+        .auth-card { width: 100%; max-width: 28rem; padding: 2rem; }
+        .auth-icon-wrapper { display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; border-radius: 9999px; background-color: rgba(var(--brand-rgb), 0.1); color: rgb(var(--brand-rgb)); margin-bottom: 1rem; }
+        .divider { display: flex; align-items: center; margin: 1.25rem 0; }
+        .divider-line { flex-grow: 1; border-top: 1px solid var(--border); }
+        .divider-text { margin: 0 1rem; color: var(--text-muted); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; }
+
+        /* Profile Dropdown */
+        .profile-btn { width: 2rem; height: 2rem; border-radius: 9999px; background-color: rgba(var(--brand-rgb), 0.1); color: rgb(var(--brand-rgb)); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: 0.2s; outline: none; }
+        .profile-btn:hover { border-color: rgb(var(--brand-rgb)); }
+        .dropdown-menu { position: absolute; right: 0; top: 100%; margin-top: 0.5rem; width: 14rem; background-color: var(--surface); border-radius: 0.75rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border); display: none; flex-direction: column; z-index: 100; overflow: hidden; }
+        .dropdown-menu.show { display: flex; }
+        .dropdown-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; font-size: 0.875rem; color: var(--danger); background: transparent; border: none; cursor: pointer; text-align: left; transition: 0.2s; }
+        .dropdown-item:hover { background-color: rgba(var(--danger), 0.1); }
+
+        /* Tabs */
+        .tabs-container { display: inline-flex; background-color: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem; padding: 0.25rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; margin-left: auto; margin-right: auto; }
+        .tab-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); background: transparent; border: none; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background-color: rgba(var(--brand-rgb), 0.1); color: rgb(var(--brand-rgb)); }
+        .tab-content { animation: fadeInUp 0.4s ease forwards; }
+
+        /* Gallery */
+        .gallery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; width: 100%; }
+        @media (min-width: 768px) { .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        @media (min-width: 1280px) { .gallery-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+        .gallery-item { position: relative; aspect-ratio: 1/1; background-color: var(--border); border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow); cursor: pointer; animation: fadeInUp 0.4s ease forwards; }
+        .gallery-img { position: relative; z-index: 10; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: transform 0.3s, opacity 0.5s; }
+        .gallery-item:hover .gallery-img { transform: scale(1.05); }
+        .gallery-overlay { position: absolute; inset: 0; z-index: 20; background: linear-gradient(to top, rgba(17,24,39,0.8), transparent); opacity: 0; transition: 0.3s; display: flex; flex-direction: column; justify-content: flex-end; padding: 1rem; }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-actions { display: flex; gap: 0.5rem; transform: translateY(1rem); transition: 0.3s; }
+        .gallery-item:hover .gallery-actions { transform: translateY(0); }
+        .action-btn { flex: 1; display: flex; justify-content: center; padding: 0.5rem; background-color: rgba(255,255,255,0.2); color: white; backdrop-filter: blur(8px); border-radius: 0.5rem; border: none; cursor: pointer; transition: 0.2s; }
+        .action-btn:hover { background-color: rgb(var(--brand-rgb)); }
+        .action-btn.delete:hover { background-color: var(--danger); }
+
+        .skeleton { position: absolute; inset: 0; background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; }
+        @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Dropzone */
+        .dropzone { width: 100%; max-width: 56rem; margin: 0 auto; height: 20rem; border: 2px dashed rgba(var(--brand-rgb), 0.5); border-radius: 1.5rem; background-color: var(--surface); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .dropzone:hover, .dropzone.dragover { background-color: rgba(var(--brand-rgb), 0.05); transform: scale(0.99); }
+
+        /* Settings */
+        .settings-grid { display: flex; flex-direction: column; gap: 1.5rem; max-width: 48rem; margin: 0 auto; width: 100%; }
+        .color-btn { width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+        .color-btn:hover { transform: scale(1.1); }
+        .btn-outline { display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 500; cursor: pointer; transition: 0.2s; }
+        .btn-outline:hover { background: var(--bg); }
+
+        /* Progress Floater */
+        .progress-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 50; display: flex; flex-direction: column; gap: 0.75rem; width: 20rem; }
+        .progress-item { background-color: var(--surface); padding: 1rem; border-radius: 1rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: fadeInUp 0.4s ease forwards; }
+
+        /* Toast & Modals */
+        .toast { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-20px); z-index: 200; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; border-radius: 9999px; font-weight: 500; font-size: 0.875rem; opacity: 0; pointer-events: none; transition: 0.3s; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success { background-color: var(--text); color: var(--bg); }
+        html.dark .toast.success { background-color: #fff; color: #000; }
+        .toast.error { background-color: var(--danger); color: white; }
+
+        .modal-overlay { position: fixed; inset: 0; z-index: 200; background-color: rgba(17,24,39,0.95); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content { transform: scale(0.95); transition: 0.3s; }
+        .modal-overlay.show .modal-content { transform: scale(1); }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col" onclick="window.closeDropdowns(event)">
+<body onclick="window.closeDropdowns(event)">
 
     <!-- NAVBAR -->
-    <header class="sticky top-0 z-50 glass border-b border-gray-200 dark:border-gray-800 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-brand-600 dark:text-brand-500">
-                <i data-lucide="aperture" class="w-8 h-8"></i>
-                <span class="font-bold text-xl tracking-tight">Pichost</span>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i data-lucide="aperture" style="width: 2rem; height: 2rem;"></i> Pichost
             </div>
             
             <div class="flex items-center gap-3">
-                <!-- Pre-Login Settings -->
-                <button id="btn-pre-settings" onclick="window.openSettingsModal()" class="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
+                <button id="btn-pre-settings" onclick="window.openSettingsModal()" class="btn-icon">
+                    <i data-lucide="settings" style="width: 1.25rem; height: 1.25rem;"></i>
                 </button>
 
-                <!-- Post-Login Profile Menu -->
                 <div id="profile-menu" class="relative hidden ml-2">
-                    <button id="profile-btn" onclick="window.toggleProfileMenu(event)" class="focus:outline-none flex items-center justify-center w-8 h-8 rounded-full bg-brand-100 text-brand-600 overflow-hidden ring-2 ring-transparent hover:ring-brand-500 transition-all">
-                        <!-- Filled by JS -->
-                    </button>
+                    <button id="profile-btn" onclick="window.toggleProfileMenu(event)" class="profile-btn"></button>
                     
-                    <!-- Dropdown Content -->
-                    <div id="profile-dropdown" class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hidden flex-col overflow-hidden z-[100]">
-                        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                            <p id="dd-name" class="text-sm font-semibold text-gray-900 dark:text-white truncate">Name</p>
-                            <p id="dd-email" class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">email@example.com</p>
+                    <div id="profile-dropdown" class="dropdown-menu">
+                        <div style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); background-color: rgba(0,0,0,0.02);">
+                            <p id="dd-name" class="truncate" style="font-size: 0.875rem; font-weight: 600; color: var(--text);">Name</p>
+                            <p id="dd-email" class="truncate" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.125rem;">email@example.com</p>
                         </div>
-                        <button onclick="window.logout()" class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors">
-                            <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+                        <button onclick="window.logout()" class="dropdown-item">
+                            <i data-lucide="log-out" style="width: 1rem; height: 1rem;"></i> Sign Out
                         </button>
                     </div>
                 </div>
@@ -111,288 +182,239 @@
     </header>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="hidden fixed top-24 left-1/2 -translate-x-1/2 z-[100] items-center gap-3 px-6 py-3 rounded-full shadow-xl font-medium text-sm transition-all duration-300">
-        <i data-lucide="info" id="toast-icon" class="w-5 h-5"></i>
+    <div id="toast" class="toast">
+        <i data-lucide="info" id="toast-icon" style="width: 1.25rem; height: 1.25rem;"></i>
         <span id="toast-msg">Notification</span>
     </div>
 
     <!-- MAIN WRAPPER -->
-    <main class="flex-grow flex flex-col relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="main-wrapper">
         
         <!-- PAGE 1: AUTHENTICATION -->
-        <div id="auth-page" class="flex-grow flex items-center justify-center animate-fade-in-up hidden">
-            <div class="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div id="auth-page" class="auth-container hidden">
+            <div class="card auth-card">
                 
                 <!-- Login Form -->
-                <div id="form-login" class="p-8 transition-all duration-300">
-                    <div class="text-center mb-6">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-500 mb-4">
-                            <i data-lucide="shield-check" class="w-8 h-8"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold">Welcome to Pichost</h2>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm mt-2">Sign in to your unlimited cloud storage.</p>
+                <div id="form-login">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="auth-icon-wrapper"><i data-lucide="shield-check" style="width: 2rem; height: 2rem;"></i></div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700;">Welcome to Pichost</h2>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.5rem;">Sign in to your unlimited cloud storage.</p>
                     </div>
                     
-                    <!-- Google Login Button Container -->
-                    <div id="google-login-container" class="mb-5 flex justify-center"></div>
+                    <div id="google-login-container" style="display: flex; justify-content: center; margin-bottom: 1.25rem;"></div>
 
-                    <div class="relative flex items-center py-2 mb-5">
-                        <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-                        <span class="flex-shrink-0 mx-4 text-gray-400 text-xs font-medium uppercase">Or continue with username</span>
-                        <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+                    <div class="divider">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">Or continue with username</span>
+                        <div class="divider-line"></div>
                     </div>
 
-                    <form onsubmit="event.preventDefault(); window.auth('login', this)" class="space-y-4">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i data-lucide="user" class="h-5 w-5 text-gray-400"></i></div>
-                            <input type="text" name="username" autocomplete="username" required placeholder="Username" class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-xl leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <form onsubmit="event.preventDefault(); window.auth('login', this)">
+                        <div class="input-wrapper">
+                            <div class="input-icon"><i data-lucide="user" style="width: 1.25rem; height: 1.25rem;"></i></div>
+                            <input type="text" name="username" autocomplete="username" required placeholder="Username" class="input-field">
                         </div>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i data-lucide="lock" class="h-5 w-5 text-gray-400"></i></div>
-                            <input type="password" name="password" autocomplete="current-password" required placeholder="Password" class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-xl leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <div class="input-wrapper">
+                            <div class="input-icon"><i data-lucide="lock" style="width: 1.25rem; height: 1.25rem;"></i></div>
+                            <input type="password" name="password" autocomplete="current-password" required placeholder="Password" class="input-field">
                         </div>
-                        <button type="submit" class="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl text-sm font-medium text-white bg-gray-900 hover:bg-black dark:bg-brand-600 dark:hover:bg-brand-700 transition-colors">
-                            <span>Sign In</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        <button type="submit" class="btn-primary" style="background-color: var(--text); color: var(--bg);">
+                            <span>Sign In</span> <i data-lucide="arrow-right" style="width: 1rem; height: 1rem;"></i>
                         </button>
                     </form>
-                    <div class="mt-6 text-center">
-                        <span class="text-sm text-gray-500 dark:text-gray-400">Don't have an account?</span>
-                        <button type="button" onclick="window.toggleAuthView()" class="ml-1 text-sm font-medium text-brand-600 hover:text-brand-500 transition-colors">Create one</button>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <span style="font-size: 0.875rem; color: var(--text-muted);">Don't have an account?</span>
+                        <button type="button" onclick="window.toggleAuthView()" style="background:none; border:none; color:rgb(var(--brand-rgb)); font-weight: 500; font-size: 0.875rem; cursor: pointer; margin-left: 0.25rem;">Create one</button>
                     </div>
                 </div>
 
                 <!-- Register Form -->
-                <div id="form-register" class="p-8 hidden transition-all duration-300">
-                    <div class="text-center mb-8">
-                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-500 mb-4">
-                            <i data-lucide="user-plus" class="w-8 h-8"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold">Create Account</h2>
+                <div id="form-register" class="hidden">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div class="auth-icon-wrapper"><i data-lucide="user-plus" style="width: 2rem; height: 2rem;"></i></div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700;">Create Account</h2>
                     </div>
                     
-                    <form onsubmit="event.preventDefault(); window.auth('register', this)" class="space-y-4">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i data-lucide="user" class="h-5 w-5 text-gray-400"></i></div>
-                            <input type="text" name="username" autocomplete="username" required minlength="3" placeholder="Choose Username" class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-xl leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <form onsubmit="event.preventDefault(); window.auth('register', this)">
+                        <div class="input-wrapper">
+                            <div class="input-icon"><i data-lucide="user" style="width: 1.25rem; height: 1.25rem;"></i></div>
+                            <input type="text" name="username" autocomplete="username" required minlength="3" placeholder="Choose Username" class="input-field">
                         </div>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i data-lucide="lock" class="h-5 w-5 text-gray-400"></i></div>
-                            <input type="password" name="password" autocomplete="new-password" required minlength="4" placeholder="Choose Password" class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 rounded-xl leading-5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <div class="input-wrapper">
+                            <div class="input-icon"><i data-lucide="lock" style="width: 1.25rem; height: 1.25rem;"></i></div>
+                            <input type="password" name="password" autocomplete="new-password" required minlength="4" placeholder="Choose Password" class="input-field">
                         </div>
-                        <button type="submit" class="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors">
-                            <span>Register</span>
-                        </button>
+                        <button type="submit" class="btn-primary">Register</button>
                     </form>
-                    <div class="mt-6 text-center">
-                        <span class="text-sm text-gray-500">Already have an account?</span>
-                        <button type="button" onclick="window.toggleAuthView()" class="ml-1 text-sm font-medium text-brand-600 transition-colors">Sign in</button>
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <span style="font-size: 0.875rem; color: var(--text-muted);">Already have an account?</span>
+                        <button type="button" onclick="window.toggleAuthView()" style="background:none; border:none; color:rgb(var(--brand-rgb)); font-weight: 500; font-size: 0.875rem; cursor: pointer; margin-left: 0.25rem;">Sign in</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- PAGE 2: DASHBOARD -->
-        <div id="dashboard-page" class="hidden w-full flex-col gap-6">
+        <div id="dashboard-page" class="hidden flex-col gap-6">
             
-            <div class="flex items-center justify-center mb-4">
-                <div class="inline-flex bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-1 shadow-sm">
-                    <button id="btn-tab-gallery" onclick="window.switchTab('gallery')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all">
-                        <i data-lucide="grid" class="w-4 h-4"></i> Gallery
-                    </button>
-                    <button id="btn-tab-upload" onclick="window.switchTab('upload')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all">
-                        <i data-lucide="upload-cloud" class="w-4 h-4"></i> Upload
-                    </button>
-                    <button id="btn-tab-settings" onclick="window.switchTab('settings')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all">
-                        <i data-lucide="sliders" class="w-4 h-4"></i> Settings & About
-                    </button>
+            <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                <div class="tabs-container">
+                    <button id="btn-tab-gallery" onclick="window.switchTab('gallery')" class="tab-btn"><i data-lucide="grid" style="width: 1rem; height: 1rem;"></i> Gallery</button>
+                    <button id="btn-tab-upload" onclick="window.switchTab('upload')" class="tab-btn"><i data-lucide="upload-cloud" style="width: 1rem; height: 1rem;"></i> Upload</button>
+                    <button id="btn-tab-settings" onclick="window.switchTab('settings')" class="tab-btn"><i data-lucide="sliders" style="width: 1rem; height: 1rem;"></i> Settings & About</button>
                 </div>
             </div>
 
             <!-- TAB: GALLERY -->
             <div id="tab-gallery" class="tab-content w-full">
-                <div id="gallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 w-full"></div>
+                <div id="gallery" class="gallery-grid"></div>
             </div>
 
             <!-- TAB: UPLOAD -->
-            <div id="tab-upload" class="tab-content hidden opacity-0 translate-y-4 w-full max-w-4xl mx-auto">
-                <div id="drop-zone" onclick="document.getElementById('file-input').click()" class="relative group w-full h-80 rounded-3xl border-2 border-dashed border-brand-300 dark:border-brand-800 bg-white dark:bg-gray-900 hover:bg-brand-50 flex flex-col items-center justify-center cursor-pointer shadow-sm transition-all duration-300">
-                    <div class="z-10 flex flex-col items-center text-gray-500 group-hover:text-brand-600 transition-colors">
-                        <i data-lucide="cloud-upload" class="w-16 h-16 mb-4"></i>
-                        <h3 class="text-2xl font-bold mb-2">Drag & Drop Images</h3>
-                        <p class="text-sm opacity-80">Or click to browse your files</p>
-                    </div>
+            <div id="tab-upload" class="tab-content hidden w-full">
+                <div id="drop-zone" class="dropzone" onclick="document.getElementById('file-input').click()">
+                    <i data-lucide="cloud-upload" style="width: 4rem; height: 4rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text);">Drag & Drop Images</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">Or click to browse your files</p>
                     <input type="file" id="file-input" hidden multiple accept="image/*" onchange="window.handleFiles(this.files)">
                 </div>
             </div>
 
             <!-- TAB: SETTINGS & ABOUT -->
-            <div id="tab-settings" class="tab-content hidden opacity-0 translate-y-4 w-full max-w-3xl mx-auto space-y-6">
-                <!-- Config Card -->
-                <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
-                    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
-                        <h3 class="text-lg font-bold flex items-center gap-2"><i data-lucide="server" class="w-5 h-5 text-brand-500"></i> Backend Configuration</h3>
+            <div id="tab-settings" class="tab-content hidden w-full">
+                <div class="settings-grid">
+                    
+                    <div class="card" style="padding: 0;">
+                        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="server" style="color: rgb(var(--brand-rgb)); width: 1.25rem; height: 1.25rem;"></i> Backend Configuration</h3>
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; gap: 0.75rem;">
+                            <input type="url" id="inp-worker-url" class="input-field" style="flex: 1; padding-left: 1rem;">
+                            <button onclick="window.saveWorkerUrl()" class="btn-primary" style="width: auto;">Save</button>
+                        </div>
                     </div>
-                    <div class="p-6 flex gap-3">
-                        <input type="url" id="inp-worker-url" class="flex-1 px-4 py-2 border rounded-xl bg-gray-50 dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-brand-500 outline-none">
-                        <button onclick="window.saveWorkerUrl()" class="px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-xl">Save</button>
-                    </div>
-                </div>
 
-                <!-- Personalization Card -->
-                <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-                    <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
-                        <h3 class="text-lg font-bold flex items-center gap-2"><i data-lucide="palette" class="w-5 h-5 text-brand-500"></i> Personalization</h3>
-                    </div>
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <label class="block text-sm font-medium mb-3">Color Theme</label>
-                            <div class="flex gap-4">
-                                <button onclick="window.setThemeColor('blue')" class="w-10 h-10 rounded-full bg-blue-500 ring-2 ring-offset-2 ring-transparent focus:ring-blue-500 hover:scale-110 transition-transform"></button>
-                                <button onclick="window.setThemeColor('emerald')" class="w-10 h-10 rounded-full bg-emerald-500 ring-2 ring-offset-2 ring-transparent focus:ring-emerald-500 hover:scale-110 transition-transform"></button>
-                                <button onclick="window.setThemeColor('violet')" class="w-10 h-10 rounded-full bg-violet-500 ring-2 ring-offset-2 ring-transparent focus:ring-violet-500 hover:scale-110 transition-transform"></button>
-                                <button onclick="window.setThemeColor('rose')" class="w-10 h-10 rounded-full bg-rose-500 ring-2 ring-offset-2 ring-transparent focus:ring-rose-500 hover:scale-110 transition-transform"></button>
+                    <div class="card" style="padding: 0;">
+                        <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="palette" style="color: rgb(var(--brand-rgb)); width: 1.25rem; height: 1.25rem;"></i> Personalization</h3>
+                        </div>
+                        <div style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                            <div>
+                                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">Color Theme</label>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button onclick="window.setThemeColor('blue')" class="color-btn" style="background-color: #3b82f6;"></button>
+                                    <button onclick="window.setThemeColor('emerald')" class="color-btn" style="background-color: #10b981;"></button>
+                                    <button onclick="window.setThemeColor('violet')" class="color-btn" style="background-color: #8b5cf6;"></button>
+                                    <button onclick="window.setThemeColor('rose')" class="color-btn" style="background-color: #f43f5e;"></button>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">Appearance</label>
+                                <button onclick="window.toggleDarkMode()" class="btn-outline">
+                                    <i data-lucide="moon" id="btn-theme-icon" style="width: 1rem; height: 1rem;"></i> Toggle Dark/Light Mode
+                                </button>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-3">Appearance</label>
-                            <button onclick="window.toggleDarkMode()" class="flex items-center gap-2 px-5 py-2.5 border rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:border-gray-700 transition-colors">
-                                <i data-lucide="moon" id="btn-theme-icon" class="w-4 h-4"></i> Toggle Dark/Light Mode
-                            </button>
-                        </div>
                     </div>
-                </div>
 
-                <!-- About Card -->
-                <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden text-center p-8">
-                    <i data-lucide="heart" class="w-10 h-10 text-brand-500 mx-auto mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">About Pichost</h3>
-                    <p class="text-gray-600 dark:text-gray-400 max-w-xl mx-auto">Powered by Cloudflare Workers and entirely made possible by the generous, unlimited cloud infrastructure provided by the <b>Telegram API</b>.</p>
+                    <div class="card" style="text-align: center; padding: 2rem;">
+                        <i data-lucide="heart" style="width: 2.5rem; height: 2.5rem; color: rgb(var(--brand-rgb)); margin: 0 auto 1rem;"></i>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">About Pichost</h3>
+                        <p style="color: var(--text-muted); line-height: 1.6;">Powered by Cloudflare Workers and entirely made possible by the generous, unlimited cloud infrastructure provided by the <b>Telegram API</b>.</p>
+                    </div>
+
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="mt-auto py-6 border-t border-gray-200 dark:border-gray-800">
-        <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400">
-            &copy; 2026 TheGT. All rights reserved.
-        </div>
+    <footer style="margin-top: auto; padding: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.875rem; font-weight: 500; color: var(--text-muted);">
+        &copy; 2026 TheGT. All rights reserved.
     </footer>
 
     <!-- MODALS & PROGRESS -->
-    <div id="progress-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 w-80"></div>
+    <div id="progress-container" class="progress-container"></div>
 
-    <div id="pre-settings-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm opacity-0 transition-opacity">
-        <div class="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl p-6 transform scale-95 transition-transform" id="pre-settings-card">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="text-lg font-bold flex items-center gap-2"><i data-lucide="server" class="w-5 h-5 text-brand-500"></i> Setup Backend</h3>
-                <button onclick="window.closeSettingsModal()"><i data-lucide="x" class="w-5 h-5 text-gray-500"></i></button>
+    <div id="pre-settings-modal" class="modal-overlay">
+        <div class="card modal-content" style="width: 100%; max-width: 28rem; padding: 1.5rem; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="server" style="color: rgb(var(--brand-rgb)); width: 1.25rem; height: 1.25rem;"></i> Setup Backend</h3>
+                <button onclick="window.closeSettingsModal()" style="background:none; border:none; color: var(--text-muted); cursor: pointer;"><i data-lucide="x" style="width: 1.25rem; height: 1.25rem;"></i></button>
             </div>
-            <input type="url" id="inp-pre-worker" class="w-full px-4 py-3 border rounded-xl bg-gray-50 dark:bg-gray-800 dark:border-gray-700 mb-4 focus:ring-2 focus:ring-brand-500 outline-none">
-            <button onclick="window.savePreWorkerUrl()" class="w-full py-3 bg-brand-600 text-white rounded-xl">Apply & Reload</button>
+            <input type="url" id="inp-pre-worker" class="input-field" style="margin-bottom: 1rem; padding-left: 1rem;">
+            <button onclick="window.savePreWorkerUrl()" class="btn-primary">Apply & Reload</button>
         </div>
     </div>
 
-    <div id="modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-gray-900/95 backdrop-blur-sm">
-        <button onclick="document.getElementById('modal').style.display='none'" class="absolute top-6 right-6 p-2 text-white/70 hover:text-white bg-white/10 rounded-full">
-            <i data-lucide="x" class="w-8 h-8"></i>
-        </button>
-        <img id="modal-img" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl scale-95 transition-transform">
+    <div id="modal" class="modal-overlay" onclick="if(event.target === this) this.classList.remove('show')">
+        <button onclick="document.getElementById('modal').classList.remove('show')" style="position: absolute; top: 1.5rem; right: 1.5rem; background: rgba(255,255,255,0.1); border: none; padding: 0.5rem; border-radius: 9999px; color: white; cursor: pointer;"><i data-lucide="x" style="width: 2rem; height: 2rem;"></i></button>
+        <img id="modal-img" class="modal-content" style="max-width: 90vw; max-height: 90vh; border-radius: 0.5rem;">
     </div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // ==========================================
-        // CONFIGURATION
+        // CONFIGURATION (Exactly as you requested)
         // ==========================================
         const DEFAULT_WORKER = 'https://pichost.vivekpereiraalbert.workers.dev';
-        
-        // ADD YOUR GOOGLE CLIENT ID HERE:
         const GOOGLE_CLIENT_ID = "563051437889-an1hf5tqn2u2cd9smms0o9v13rjnu428.apps.googleusercontent.com";
 
-        window.STATE = {
-            worker: localStorage.getItem('worker_url') || DEFAULT_WORKER,
-            images:[],
-            user: null
-        };
+        window.STATE = { worker: localStorage.getItem('worker_url') || DEFAULT_WORKER, images:[], user: null };
 
-        // --- GOOGLE SIGN-IN INITIALIZATION ---
+        // --- GOOGLE SIGN-IN ---
         window.onload = function () {
             if(typeof google !== 'undefined' && GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== "YOUR_GOOGLE_CLIENT_ID_HERE.apps.googleusercontent.com") {
-                google.accounts.id.initialize({
-                    client_id: GOOGLE_CLIENT_ID,
-                    callback: window.handleGoogleLogin
-                });
+                google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: window.handleGoogleLogin });
                 google.accounts.id.renderButton(
                     document.getElementById("google-login-container"),
                     { theme: document.documentElement.classList.contains('dark') ? "filled_black" : "outline", size: "large", width: 336 }
                 );
             } else {
-                document.getElementById('google-login-container').innerHTML = `<div class="text-xs text-red-500 text-center">Google Login Not Configured.<br>Add GOOGLE_CLIENT_ID in index.html</div>`;
+                document.getElementById('google-login-container').innerHTML = `<div style="font-size: 12px; color: var(--danger); text-align: center;">Google Login Not Configured.</div>`;
             }
         };
 
-        // --- CORE UI HELPERS ---
+        // --- UI HELPERS ---
         lucide.createIcons();
 
         window.showToast = function(msg, type = 'success') {
             const toast = document.getElementById('toast');
-            toast.className = `fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-6 py-3 rounded-full shadow-lg font-medium text-sm transition-all duration-300 show ${type === 'error' ? 'bg-red-600 text-white' : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'}`;
+            toast.className = `toast ${type === 'error' ? 'error' : 'success'}`;
             document.getElementById('toast-icon').setAttribute('data-lucide', type === 'error' ? 'alert-circle' : 'check-circle-2');
             document.getElementById('toast-msg').innerText = msg;
             lucide.createIcons(); 
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.classList.add('hidden'), 300); }, 3000);
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         };
 
-        // --- DROPDOWN & PROFILE MENU LOGIC ---
         window.toggleProfileMenu = function(e) {
             e.stopPropagation();
-            document.getElementById('profile-dropdown').classList.toggle('hidden');
-            document.getElementById('profile-dropdown').classList.toggle('flex');
+            document.getElementById('profile-dropdown').classList.toggle('show');
         };
 
         window.closeDropdowns = function(e) {
             const dd = document.getElementById('profile-dropdown');
-            if (dd && !dd.contains(e.target) && e.target.id !== 'profile-btn') {
-                dd.classList.add('hidden');
-                dd.classList.remove('flex');
-            }
+            if (dd && !dd.contains(e.target) && e.target.id !== 'profile-btn') dd.classList.remove('show');
         };
 
         window.renderProfileMenu = function() {
             if(!window.STATE.user) return;
-            
             const btn = document.getElementById('profile-btn');
-            if(window.STATE.user.picture) {
-                btn.innerHTML = `<img src="${window.STATE.user.picture}" class="w-full h-full object-cover">`;
-            } else {
-                btn.innerHTML = `<i data-lucide="user" class="w-5 h-5"></i>`;
-                lucide.createIcons();
-            }
-
+            btn.innerHTML = window.STATE.user.picture ? `<img src="${window.STATE.user.picture}" style="width:100%; height:100%; object-fit:cover;">` : `<i data-lucide="user" style="width:1.25rem; height:1.25rem;"></i>`;
             document.getElementById('dd-name').innerText = window.STATE.user.name;
             document.getElementById('dd-email').innerText = window.STATE.user.email;
             document.getElementById('profile-menu').classList.remove('hidden');
+            lucide.createIcons();
         };
 
         // --- AUTHENTICATION FLOW ---
         window.handleGoogleLogin = async function(response) {
             try {
-                const r = await fetch(`${window.STATE.worker}/google-login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: response.credential }),
-                    credentials: 'include'
-                });
-
-                if(r.ok) {
-                    window.showToast("Signed in with Google!");
-                    window.checkSession();
-                } else {
-                    window.showToast(await r.text(), "error");
-                }
-            } catch(e) {
-                window.showToast("Google Login Error", "error");
-            }
+                const r = await fetch(`${window.STATE.worker}/google-login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: response.credential }), credentials: 'include' });
+                if(r.ok) { window.showToast("Signed in with Google!"); window.checkSession(); } 
+                else { window.showToast(await r.text(), "error"); }
+            } catch(e) { window.showToast("Google Login Error", "error"); }
         };
 
         window.auth = async function(type, form) {
@@ -400,37 +422,26 @@
             try {
                 const r = await fetch(`${window.STATE.worker}/${type}`, { method: 'POST', body: fd, credentials: 'include' });
                 if(r.ok) {
-                    if(type === 'login') {
-                        window.showToast("Signed in securely!");
-                        window.checkSession(); 
-                    } else {
-                        window.showToast("Account Created! You can now sign in.");
-                        form.reset(); window.toggleAuthView();
-                    }
+                    if(type === 'login') { window.showToast("Signed in securely!"); window.checkSession(); } 
+                    else { window.showToast("Account Created! You can now sign in."); form.reset(); window.toggleAuthView(); }
                 } else { window.showToast(await r.text(), "error"); }
             } catch(e) { window.showToast("Network Error.", "error"); }
         };
 
-        window.logout = async function() {
-            await fetch(`${window.STATE.worker}/logout`, { credentials: 'include' });
-            location.reload(); 
-        };
+        window.logout = async function() { await fetch(`${window.STATE.worker}/logout`, { credentials: 'include' }); location.reload(); };
 
         window.checkSession = async function() {
             try {
-                // Fetch both Images and User Profile concurrently
                 const [listRes, meRes] = await Promise.all([
                     fetch(`${window.STATE.worker}/list`, { credentials: 'include' }),
                     fetch(`${window.STATE.worker}/me`, { credentials: 'include' })
                 ]);
-
                 if(listRes.ok && meRes.ok) {
                     window.STATE.images = await listRes.json();
                     window.STATE.user = await meRes.json();
                     window.renderProfileMenu();
                     window.showDashboard();
                 } else {
-                    // Not authenticated
                     document.getElementById('auth-page').classList.remove('hidden');
                 }
             } catch(e) {
@@ -442,7 +453,7 @@
         // --- DASHBOARD UI ---
         window.showDashboard = function() {
             document.getElementById('auth-page').classList.add('hidden');
-            document.getElementById('btn-pre-settings').style.display = 'none';
+            document.getElementById('btn-pre-settings').classList.add('hidden');
             document.getElementById('dashboard-page').classList.remove('hidden');
             document.getElementById('dashboard-page').classList.add('flex');
             
@@ -451,15 +462,13 @@
             window.renderGallery();
         };
 
-        // --- TABS & SETTINGS ---
         window.switchTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => { el.classList.add('hidden', 'opacity-0', 'translate-y-4'); el.classList.remove('opacity-100', 'translate-y-0'); });
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('bg-brand-100', 'text-brand-700', 'dark:bg-brand-900/40', 'dark:text-brand-300'));
-
-            const act = document.getElementById('tab-' + tabId);
-            act.classList.remove('hidden');
-            setTimeout(() => { act.classList.remove('opacity-0', 'translate-y-4'); act.classList.add('opacity-100', 'translate-y-0'); }, 20);
-            document.getElementById('btn-tab-' + tabId).classList.add('bg-brand-100', 'text-brand-700', 'dark:bg-brand-900/40', 'dark:text-brand-300');
+            ['gallery', 'upload', 'settings'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('btn-tab-' + t).classList.remove('active');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('btn-tab-' + tabId).classList.add('active');
         };
 
         // --- THEME & UTILS ---
@@ -474,15 +483,10 @@
         window.setThemeColor = function(c) { document.body.setAttribute('data-theme', c); localStorage.setItem('theme_color', c); };
         
         window.openSettingsModal = function() {
-            const m = document.getElementById('pre-settings-modal');
             document.getElementById('inp-pre-worker').value = window.STATE.worker;
-            m.classList.remove('hidden'); setTimeout(() => { m.classList.remove('opacity-0'); document.getElementById('pre-settings-card').classList.remove('scale-95'); }, 10);
+            document.getElementById('pre-settings-modal').classList.add('show');
         };
-        window.closeSettingsModal = function() {
-            const m = document.getElementById('pre-settings-modal');
-            m.classList.add('opacity-0'); document.getElementById('pre-settings-card').classList.add('scale-95');
-            setTimeout(() => m.classList.add('hidden'), 300);
-        };
+        window.closeSettingsModal = function() { document.getElementById('pre-settings-modal').classList.remove('show'); };
         window.savePreWorkerUrl = function() { localStorage.setItem('worker_url', document.getElementById('inp-pre-worker').value.trim().replace(/\/$/, "") || DEFAULT_WORKER); location.reload(); };
         window.saveWorkerUrl = function() { localStorage.setItem('worker_url', document.getElementById('inp-worker-url').value.trim().replace(/\/$/, "") || DEFAULT_WORKER); window.showToast("Backend updated. Reloading..."); setTimeout(() => location.reload(), 1000); };
 
@@ -490,18 +494,18 @@
         window.renderGallery = function() {
             const gal = document.getElementById('gallery');
             if(window.STATE.images.length === 0) {
-                gal.innerHTML = `<div class="col-span-full flex flex-col items-center py-20 text-gray-400"><i data-lucide="image" class="w-16 h-16 mb-4 opacity-50"></i><p>Your gallery is empty</p></div>`;
+                gal.innerHTML = `<div style="grid-column: 1/-1; display:flex; flex-direction:column; align-items:center; padding: 5rem 0; color: var(--text-muted);"><i data-lucide="image" style="width: 4rem; height: 4rem; margin-bottom: 1rem; opacity: 0.5;"></i><p style="font-weight: 500;">Your gallery is empty</p></div>`;
                 lucide.createIcons(); return;
             }
             gal.innerHTML = window.STATE.images.map((img, i) => `
-                <div class="group relative aspect-square bg-gray-200 dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 animate-fade-in-up" style="animation-delay: ${i*30}ms">
-                    <div class="absolute inset-0 skeleton-loader"></div>
-                    <img src="${window.STATE.worker}${img.raw}" loading="lazy" class="relative z-10 w-full h-full object-cover opacity-0 transition-opacity duration-500 hover:scale-105" onload="this.style.opacity='1'; this.previousElementSibling.style.display='none'">
-                    <div class="absolute inset-0 z-20 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
-                        <div class="flex gap-2 translate-y-4 group-hover:translate-y-0 transition-transform">
-                            <button onclick="window.viewFull(${i})" class="flex-1 py-2 bg-white/20 hover:bg-brand-500 text-white backdrop-blur-md rounded-lg flex justify-center"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
-                            <button onclick="event.stopPropagation(); window.copyLink('${window.STATE.worker}${img.raw}')" class="flex-1 py-2 bg-white/20 hover:bg-white hover:text-gray-900 text-white backdrop-blur-md rounded-lg flex justify-center"><i data-lucide="link" class="w-4 h-4"></i></button>
-                            <button onclick="event.stopPropagation(); window.deleteImg('${img.id}')" class="flex-1 py-2 bg-white/20 hover:bg-red-500 text-white backdrop-blur-md rounded-lg flex justify-center"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                <div class="gallery-item" style="animation-delay: ${i*30}ms">
+                    <div class="skeleton-loader"></div>
+                    <img src="${window.STATE.worker}${img.raw}" class="gallery-img" loading="lazy" onload="this.style.opacity='1'; this.previousElementSibling.style.display='none'">
+                    <div class="gallery-overlay">
+                        <div class="gallery-actions">
+                            <button onclick="window.viewFull(${i})" class="gallery-action-btn"><i data-lucide="maximize-2" style="width: 1rem; height: 1rem;"></i></button>
+                            <button onclick="event.stopPropagation(); window.copyLink('${window.STATE.worker}${img.raw}')" class="gallery-action-btn"><i data-lucide="link" style="width: 1rem; height: 1rem;"></i></button>
+                            <button onclick="event.stopPropagation(); window.deleteImg('${img.id}')" class="gallery-action-btn delete"><i data-lucide="trash-2" style="width: 1rem; height: 1rem;"></i></button>
                         </div>
                     </div>
                 </div>
@@ -511,8 +515,7 @@
 
         window.viewFull = function(i) {
             document.getElementById('modal-img').src = window.STATE.worker + window.STATE.images[i].raw;
-            document.getElementById('modal').style.display = 'flex';
-            setTimeout(() => document.getElementById('modal-img').style.transform = 'scale(1)', 10);
+            document.getElementById('modal').classList.add('show');
         };
 
         window.copyLink = function(url) { navigator.clipboard.writeText(url); window.showToast("Link copied!"); };
@@ -530,16 +533,16 @@
         window.uploadFile = function(file) {
             const rid = Math.random().toString(36).substr(2, 6);
             const item = document.createElement('div');
-            item.className = 'bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border dark:border-gray-700 animate-fade-in-up';
+            item.className = 'progress-item';
             item.id = 'up-' + rid;
             item.innerHTML = `
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="p-2 bg-brand-50 text-brand-600 rounded-lg"><i data-lucide="image" class="w-4 h-4"></i></div>
-                    <div class="flex-1 truncate text-sm font-medium">${file.name}</div>
-                    <i data-lucide="loader-2" class="w-4 h-4 text-brand-500 animate-spin"></i>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                    <div style="padding: 0.5rem; background-color: rgba(var(--brand-rgb), 0.1); color: rgb(var(--brand-rgb)); border-radius: 0.5rem;"><i data-lucide="image" style="width: 1rem; height: 1rem;"></i></div>
+                    <div class="truncate" style="flex: 1; font-size: 0.875rem; font-weight: 500;">${file.name}</div>
+                    <i data-lucide="loader-2" class="animate-spin" style="color: rgb(var(--brand-rgb)); width: 1rem; height: 1rem;"></i>
                 </div>
-                <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
-                    <div class="bg-brand-500 h-1.5 transition-all duration-200" id="fill-${rid}" style="width: 0%"></div>
+                <div style="width: 100%; background-color: var(--border); border-radius: 9999px; height: 0.375rem; overflow: hidden;">
+                    <div id="fill-${rid}" style="height: 100%; background-color: rgb(var(--brand-rgb)); width: 0%; transition: 0.2s;"></div>
                 </div>
             `;
             document.getElementById('progress-container').appendChild(item);
@@ -563,12 +566,14 @@
             for (let item of items) if (item.kind === 'file') { window.switchTab('upload'); window.handleFiles([item.getAsFile()]); }
         });
         const dz = document.getElementById('drop-zone');['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => window.addEventListener(evt, e => e.preventDefault()));
-        dz.addEventListener('dragover', () => dz.classList.add('border-brand-500', 'bg-brand-50', 'dark:bg-brand-900/10'));
-        dz.addEventListener('dragleave', () => dz.classList.remove('border-brand-500', 'bg-brand-50', 'dark:bg-brand-900/10'));
-        dz.addEventListener('drop', e => { dz.classList.remove('border-brand-500', 'bg-brand-50', 'dark:bg-brand-900/10'); window.handleFiles(e.dataTransfer.files); });
+        dz.addEventListener('dragover', () => dz.classList.add('dragover'));
+        dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+        dz.addEventListener('drop', e => { dz.classList.remove('dragover'); window.handleFiles(e.dataTransfer.files); });
 
         // BOOTSTRAP
-        if(localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+        if(localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
         const sc = localStorage.getItem('theme_color'); if(sc) document.body.setAttribute('data-theme', sc);
         
         window.checkSession();
