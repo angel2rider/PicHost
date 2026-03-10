@@ -107,6 +107,8 @@ Your images → your channel → only you can see them (and anyone you give the 
    - `TELEGRAM_CHAT_ID`  = your channel ID (with the `-100…`)
 5. Replace default Worker code with content of `worker.js` → **Deploy**
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/angel2rider/PicHost)
+
 ### 3. Google Login (optional but nice)
 
 1. Google Cloud Console → **APIs & Services** → **Credentials**
