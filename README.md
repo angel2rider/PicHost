@@ -60,7 +60,7 @@ sequenceDiagram
 - One-click copy link / view full / delete (owner only)
 - Dark mode (system + manual toggle)
 - 4 accent colors: blue (default), emerald, violet, rose
-- Glassmorphism + clean Tailwind + Lucide icons
+- Glassmorphism + Lucide icons
 - Edge-cached image delivery via Cloudflare
 - Session cookie (HttpOnly, Secure, SameSite=None)
 
@@ -93,39 +93,92 @@ Your images → your channel → only you can see them (and anyone you give the 
 2. Create a **private** channel
 3. Add your bot as **Administrator** (must allow posting & deleting)
 4. Get **Chat ID**:
-   - Forward any message from the channel to **@userinfobot**  
-   - It usually looks like `-1001234567890`
 
-### 2. Cloudflare Worker + KV
+   * Forward any message from the channel to **@userinfobot**
+   * It usually looks like `-1001234567890`
 
-1. Cloudflare Dashboard → **Workers & Pages** → **Create Worker**
-   - Name: e.g. `pichost-myname`
-2. **KV** → Create namespace → name it `IMG_KV`
-3. In Worker → **Settings** → **Bindings** → KV Namespace → bind `IMG_KV` as variable name `IMG_KV`
-4. **Settings** → **Variables** → add:
-   - `TELEGRAM_BOT_TOKEN` = your bot token
-   - `TELEGRAM_CHAT_ID`  = your channel ID (with the `-100…`)
-5. Replace default Worker code with content of `worker.js` → **Deploy**
+---
+
+### 2. Deploy the Backend (Cloudflare Workers)
+
+You can deploy the backend in two ways.
+
+#### ⚡ Option A — One-Click Deploy (recommended)
+
+This will automatically:
+
+* Deploy the `worker.js` backend
+* Change your **Telegram Bot Token**
+* Change your **Telegram Chat ID**
+* Create and bind the **IMG_KV** namespace
+
+Click below and follow the prompts:
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/angel2rider/PicHost/tree/main/backend)
+
+After deployment finishes, Cloudflare will give you a **Worker URL**, which will look like:
+
+`https://pichost-yourname.workers.dev`
+
+Save this — you'll need it for the frontend.
+
+---
+
+#### 🛠 Option B — Manual Deployment
+
+1. Go to **Cloudflare Dashboard → Workers & Pages → Create Worker**
+2. Give it a name (for example `pichost-myname`)
+3. Open the Worker editor and replace the default code with the contents of **`backend/worker.js`**
+4. Go to **Settings → Variables**
+5. Add the following variables:
+
+```
+TELEGRAM_BOT_TOKEN = your bot token
+TELEGRAM_CHAT_ID  = your channel ID (with the -100…)
+```
+
+6. Go to **Settings → KV Namespace**
+7. Create a namespace named:
+
+```
+IMG_KV
+```
+
+8. Bind it to the Worker with variable name:
+
+```
+IMG_KV
+```
+
+9. Click **Deploy**
+
+Once deployed, you will receive a Worker URL like:
+
+`https://pichost-yourname.workers.dev`
+
+---
 
 ### 3. Google Login (optional but nice)
 
 1. Google Cloud Console → **APIs & Services** → **Credentials**
 2. Create **OAuth 2.0 Client ID** → Web application
 3. Add **Authorized JavaScript origins**:
-   - `https://your-domain.pages.dev` (or `http://localhost:5500` etc.)
+
+   * `https://your-domain.pages.dev` (or `http://localhost:5500` etc.)
 4. Copy **Client ID**
-5. Paste it into `index.html` line containing:  
+5. Paste it into `index.html` line containing:
    `const GOOGLE_CLIENT_ID = "…";`
+
+---
 
 ### 4. Frontend
 
 1. Save `index.html` somewhere
 2. Serve it properly (cookies won’t work with `file://`):
-   - VS Code Live Server
-   - `npx serve`
-   - Cloudflare Pages / Vercel / Netlify / GitHub Pages
+
+   * VS Code Live Server
+   * `npx serve`
+   * Cloudflare Pages / Vercel / Netlify / GitHub Pages
 3. Open → if backend not set → pre-settings modal appears → enter your Worker URL
 
 Done. Upload away.
@@ -145,7 +198,6 @@ Use responsibly — personal use, portfolios, small projects, memes.
 
 - **Telegram** — for absurdly generous free file hosting & CDN
 - **Cloudflare** — free Workers, KV, edge caching/streaming
-- **Tailwind CSS** + **Lucide** — beautiful UI with almost no effort
 
 ## 👨‍💻 Author
 
