@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pichost | Secure Cloud Storage</title>
     <meta name="description" content="Pichost — free, serverless image hosting powered by Cloudflare Workers and Telegram CDN. Upload, share, and manage images with zero storage costs.">
-    <meta name="theme-color" content="#3b82f6" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#030712" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#3b82f6">
     <link rel="canonical" href="https://github.com/angel2rider/PicHost">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='m14.31 8 5.74 9.94'/><path d='M9.69 8h11.48'/><path d='m7.38 12 5.74-9.94'/><path d='M9.69 16 3.95 6.06'/><path d='M14.31 16H2.83'/><path d='m16.62 12-5.74 9.94'/></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='m14.31 8 5.74 9.94'/><path d='M9.69 8h11.48'/><path d='m7.38 12 5.74-9.94'/><path d='M9.69 16 3.95 6.06'/><path d='M14.31 16H2.83'/><path d='m16.62 12-5.74 9.94'/></svg>">
@@ -28,29 +27,32 @@
            PURE CSS THEME ENGINE (1:1 Match with your Tailwind Code)
            ========================================================= */
         :root {
-            --brand-rgb: 59, 130, 246; /* Blue Default */
-            --bg: #f9fafb;
+            --brand-rgb: 59, 130, 246;
+            --bg: #f0f7ff;
             --surface: #ffffff;
-            --border: #e5e7eb;
-            --text: #111827;
-            --text-muted: #6b7280;
+            --navbar-rgb: 255, 255, 255;
+            --border: #dbeafe;
+            --text: #0c1838;
+            --text-muted: #5b7ba8;
             --danger: #ef4444;
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
-        
+
         html.dark {
-            --bg: #030712;
-            --surface: #111827;
-            --border: #1f2937;
-            --text: #f9fafb;
-            --text-muted: #9ca3af;
+            --bg: #0c1838;
+            --surface: #152244;
+            --navbar-rgb: 21, 34, 68;
+            --border: #1f3460;
+            --text: #e2edff;
+            --text-muted: #7b9bc8;
         }
 
-        /* Color Themes */
-        body[data-theme="emerald"] { --brand-rgb: 16, 185, 129; }
-        body[data-theme="violet"] { --brand-rgb: 139, 92, 246; }
-        body[data-theme="rose"] { --brand-rgb: 244, 63, 94; }
+        /* Theme Picker */
+        .theme-btn { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem 0.25rem 0.375rem; border-radius: 0.75rem; border: 2px solid var(--border); background: var(--surface); color: var(--text); font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: all 0.2s; line-height: 1.2; }
+        .theme-btn:hover { border-color: rgb(var(--brand-rgb)); }
+        .theme-btn.active { border-color: rgb(var(--brand-rgb)); box-shadow: 0 0 0 2px rgba(var(--brand-rgb), 0.25); }
+        .theme-btn span { display: block; width: 100%; height: 1.25rem; border-radius: 0.375rem; flex-shrink: 0; }
 
         /* Resets & Base */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
@@ -87,7 +89,7 @@
             .navbar { animation: none !important; }
             .dropzone:hover .dropzone-icon { animation: none; }
             .auth-icon-wrapper { animation: none; box-shadow: none; }
-            .btn-primary:active, .btn-icon:active, .btn-outline:active, .gallery-action-btn:active, .tab-btn:active, .color-btn:active { transform: none !important; }
+            .btn-primary:active, .btn-icon:active, .btn-outline:active, .gallery-action-btn:active, .tab-btn:active, .theme-btn:active { transform: none !important; }
             .dropdown-menu.show { animation: none !important; }
             .toast.show { animation: none !important; }
             .settings-grid .card { opacity: 1 !important; animation: none !important; }
@@ -97,8 +99,7 @@
         }
 
         /* Navbar */
-        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: 4rem; }
-        html.dark .navbar { background: rgba(17, 24, 39, 0.85); }
+        .navbar { position: sticky; top: 0; z-index: 50; background: rgba(var(--navbar-rgb), 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: 4rem; }
         .nav-container { max-width: 80rem; margin: 0 auto; padding: 0 1rem; height: 100%; display: flex; align-items: center; justify-content: space-between; }
         .nav-logo { display: flex; align-items: center; gap: 0.5rem; color: rgb(var(--brand-rgb)); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.025em; }
 
@@ -171,8 +172,7 @@
 
         /* Settings */
         .settings-grid { display: flex; flex-direction: column; gap: 1.5rem; max-width: 48rem; margin: 0 auto; width: 100%; }
-        .color-btn { width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
-        .color-btn:hover { transform: scale(1.1); }
+        
         .btn-outline { display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-weight: 500; cursor: pointer; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg); }
 
@@ -219,11 +219,12 @@
             animation: toastBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
         }
 
-        /* Profile dropdown — smooth drop-in */
-        .dropdown-menu.show {
-            animation: dropdownIn 0.15s ease-out both;
+        /* Profile dropdown — smooth drop-in */.dropdown-menu.show { animation: dropdownIn 0.15s ease-out both;
             transform-origin: top right;
         }
+
+        /* Theme picker buttons — keyboard friendly */
+        .theme-btn:focus-visible { outline: 2px solid rgb(var(--brand-rgb)); outline-offset: 2px; }
 
         /* Auth icon — subtle pulsing glow */
         .auth-icon-wrapper {
@@ -477,12 +478,18 @@
                         </div>
                         <div style="padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
                             <div>
-                                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;" for="theme-blue">Color Theme</label>
-                                <div style="display: flex; gap: 1rem;">
-                                    <button id="theme-blue" onclick="window.setThemeColor('blue')" class="color-btn" style="background-color: #3b82f6;" aria-label="Blue theme"></button>
-                                    <button onclick="window.setThemeColor('emerald')" class="color-btn" style="background-color: #10b981;" aria-label="Emerald theme"></button>
-                                    <button onclick="window.setThemeColor('violet')" class="color-btn" style="background-color: #8b5cf6;" aria-label="Violet theme"></button>
-                                    <button onclick="window.setThemeColor('rose')" class="color-btn" style="background-color: #f43f5e;" aria-label="Rose theme"></button>
+                                <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">Color Theme</label>
+                                <div id="theme-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem;">
+                                    <button onclick="window.setThemeColor('ocean')" class="theme-btn" data-theme="ocean" aria-label="Ocean theme"><span style="background:#3b82f6;"></span>Ocean</button>
+                                    <button onclick="window.setThemeColor('forest')" class="theme-btn" data-theme="forest" aria-label="Forest theme"><span style="background:#10b981;"></span>Forest</button>
+                                    <button onclick="window.setThemeColor('sunset')" class="theme-btn" data-theme="sunset" aria-label="Sunset theme"><span style="background:#f97316;"></span>Sunset</button>
+                                    <button onclick="window.setThemeColor('violet')" class="theme-btn" data-theme="violet" aria-label="Violet theme"><span style="background:#8b5cf6;"></span>Violet</button>
+                                    <button onclick="window.setThemeColor('crimson')" class="theme-btn" data-theme="crimson" aria-label="Crimson theme"><span style="background:#dc2626;"></span>Crimson</button>
+                                    <button onclick="window.setThemeColor('gold')" class="theme-btn" data-theme="gold" aria-label="Gold theme"><span style="background:#f59e0b;"></span>Gold</button>
+                                    <button onclick="window.setThemeColor('slate')" class="theme-btn" data-theme="slate" aria-label="Slate theme"><span style="background:#64748b;"></span>Slate</button>
+                                    <button onclick="window.setThemeColor('emerald')" class="theme-btn" data-theme="emerald" aria-label="Emerald theme"><span style="background:#14b8a6;"></span>Emerald</button>
+                                    <button onclick="window.setThemeColor('ruby')" class="theme-btn" data-theme="ruby" aria-label="Ruby theme"><span style="background:#f43f5e;"></span>Ruby</button>
+                                    <button onclick="window.setThemeColor('frost')" class="theme-btn" data-theme="frost" aria-label="Frost theme"><span style="background:#6366f1;"></span>Frost</button>
                                 </div>
                             </div>
                             <div>
@@ -543,10 +550,23 @@
 
             // --- FAVICON THEME ---
             var FAVICON_SVG = 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'COLOR\' stroke-width=\'2.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'m14.31 8 5.74 9.94\'/><path d=\'M9.69 8h11.48\'/><path d=\'m7.38 12 5.74-9.94\'/><path d=\'M9.69 16 3.95 6.06\'/><path d=\'M14.31 16H2.83\'/><path d=\'m16.62 12-5.74 9.94\'/></svg>';
-            var THEME_COLORS = { blue: '#3b82f6', emerald: '#10b981', violet: '#8b5cf6', rose: '#f43f5e' };
+            var THEMES = {
+                ocean:   { brand:[59,130,246],   light:{bg:'#f0f7ff',surface:'#ffffff',border:'#dbeafe',text:'#0c1838',muted:'#5b7ba8'}, dark:{bg:'#0c1838',surface:'#152244',border:'#1f3460',text:'#e2edff',muted:'#7b9bc8'} },
+                forest:  { brand:[16,185,129],   light:{bg:'#f0faf5',surface:'#ffffff',border:'#d1f0e0',text:'#0a1e14',muted:'#4a7a5c'}, dark:{bg:'#0a1e14',surface:'#112e1e',border:'#1a3d28',text:'#e0f5ea',muted:'#5a9a74'} },
+                sunset:  { brand:[249,115,22],   light:{bg:'#fff8f0',surface:'#ffffff',border:'#fde8d0',text:'#2a1a0a',muted:'#9a6a3a'}, dark:{bg:'#1a1008',surface:'#2a1e10',border:'#3d2a1a',text:'#f5ede0',muted:'#aa7a4a'} },
+                violet:  { brand:[139,92,246],   light:{bg:'#f8f5ff',surface:'#ffffff',border:'#e4d8ff',text:'#1a0e38',muted:'#6a5a8a'}, dark:{bg:'#140a28',surface:'#1e1438',border:'#2e1e50',text:'#ece0ff',muted:'#8a7aaa'} },
+                crimson: { brand:[220,38,38],    light:{bg:'#fef5f5',surface:'#ffffff',border:'#fbd5d5',text:'#2a0a0a',muted:'#8a4a4a'}, dark:{bg:'#1a0808',surface:'#2a1212',border:'#3d1a1a',text:'#fdeaea',muted:'#aa5a5a'} },
+                gold:    { brand:[245,158,11],   light:{bg:'#fffdf5',surface:'#ffffff',border:'#fde8b0',text:'#1a1808',muted:'#8a7a3a'}, dark:{bg:'#141008',surface:'#221e10',border:'#352e1a',text:'#f5f0dc',muted:'#9a8a4a'} },
+                slate:   { brand:[100,116,139],  light:{bg:'#f6f7f9',surface:'#ffffff',border:'#e0e3e8',text:'#0f1218',muted:'#5a6070'}, dark:{bg:'#0f1218',surface:'#1a1e26',border:'#262a34',text:'#e2e5eb',muted:'#7a8090'} },
+                emerald: { brand:[20,184,166],   light:{bg:'#f0fcfb',surface:'#ffffff',border:'#c8f0ec',text:'#081e1c',muted:'#3a7a74'}, dark:{bg:'#081e1c',surface:'#102e2a',border:'#183d38',text:'#daf5f0',muted:'#5aa9a0'} },
+                ruby:    { brand:[244,63,94],    light:{bg:'#fef5fa',surface:'#ffffff',border:'#fbd5e6',text:'#2a081a',muted:'#8a4a68'}, dark:{bg:'#1a0812',surface:'#2a1220',border:'#3d1a2e',text:'#fde8f0',muted:'#aa5a7a'} },
+                frost:   { brand:[99,102,241],   light:{bg:'#f0f4ff',surface:'#ffffff',border:'#d4ddf5',text:'#0c1230',muted:'#4a5a8a'}, dark:{bg:'#0a0e28',surface:'#121838',border:'#1e2450',text:'#e0e5ff',muted:'#6a7aaa'} }
+            };
 
-            window.updateFavicon = function(hexColor) {
-                var svg = FAVICON_SVG.replace('COLOR', hexColor.replace('#', '%23'));
+            window.updateFavicon = function(themeName) {
+                var t = THEMES[themeName] || THEMES.ocean;
+                var hex = '#' + t.brand.map(function(v) { return v.toString(16).padStart(2, '0'); }).join('');
+                var svg = FAVICON_SVG.replace('COLOR', hex.replace('#', '%23'));
                 var el = document.querySelector('link[rel="icon"]');
                 if (el) el.href = svg;
                 el = document.querySelector('link[rel="apple-touch-icon"]');
@@ -574,12 +594,16 @@
 
             // --- BOOTSTRAP THEME ---
             // Apply theme before any paint to avoid flash
-            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
+            var _isDark = localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (_isDark) document.documentElement.classList.add('dark');
+            var sc = localStorage.getItem('theme_color') || 'ocean';
+            if (THEMES[sc]) window.applyTheme(sc, _isDark);
+            window.updateFavicon(sc);
+            // Mark the active theme button
+            var _btns = document.querySelectorAll('.theme-btn');
+            for (var _bi = 0; _bi < _btns.length; _bi++) {
+                _btns[_bi].classList.toggle('active', _btns[_bi].getAttribute('data-theme') === sc);
             }
-            var sc = localStorage.getItem('theme_color');
-            if (sc) document.body.setAttribute('data-theme', sc);
-            window.updateFavicon(THEME_COLORS[sc] || THEME_COLORS.blue);
 
             // --- GLOBAL ERROR HANDLER ---
             window.addEventListener('unhandledrejection', function(e) {
@@ -767,17 +791,42 @@
             window.toggleDarkMode = function() {
                 var isDark = document.documentElement.classList.toggle('dark');
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                // Update meta theme-color
+                var sc = localStorage.getItem('theme_color') || 'ocean';
+                window.applyTheme(sc, isDark);
+            };
+
+            window.applyTheme = function(themeName, isDark) {
+                var t = THEMES[themeName] || THEMES.ocean;
+                var mode = isDark ? 'dark' : 'light';
+                var c = t[mode];
+                document.body.style.setProperty('--bg', c.bg);
+                document.body.style.setProperty('--surface', c.surface);
+                document.body.style.setProperty('--border', c.border);
+                document.body.style.setProperty('--text', c.text);
+                document.body.style.setProperty('--text-muted', c.muted);
+                document.body.style.setProperty('--brand-rgb', t.brand.join(','));
+                // Derive navbar RGB from surface color
+                var s = c.surface.replace('#','');
+                var nr = parseInt(s.substr(0,2), 16);
+                var ng = parseInt(s.substr(2,2), 16);
+                var nb = parseInt(s.substr(4,2), 16);
+                document.body.style.setProperty('--navbar-rgb', nr+','+ng+','+nb);
+                // Update theme-color meta
                 var meta = document.querySelector('meta[name="theme-color"]');
-                if (meta && meta.hasAttribute('media')) {
-                    // For browsers that support media-based theme-color, we just leave both
-                }
+                if (meta) meta.content = 'rgb(' + t.brand.join(',') + ')';
             };
 
             window.setThemeColor = function(c) {
-                document.body.setAttribute('data-theme', c);
+                if (!THEMES[c]) return;
                 localStorage.setItem('theme_color', c);
-                window.updateFavicon(THEME_COLORS[c] || THEME_COLORS.blue);
+                var isDark = document.documentElement.classList.contains('dark');
+                window.applyTheme(c, isDark);
+                window.updateFavicon(c);
+                // Update active state on theme buttons
+                var btns = document.querySelectorAll('.theme-btn');
+                for (var bi = 0; bi < btns.length; bi++) {
+                    btns[bi].classList.toggle('active', btns[bi].getAttribute('data-theme') === c);
+                }
             };
 
             window.openSettingsModal = function() {
