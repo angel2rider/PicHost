@@ -34,6 +34,7 @@ export default {
       else if (path === "/upload" && request.method === "POST") response = await uploadImage(request, env);
       else if (path === "/list") response = await listImages(request, env);
       else if (path.startsWith("/raw/")) response = await rawImage(path.split("/")[2], env);
+      else if (path.startsWith("/view/")) response = await viewImage(path.split("/")[2], request, env);
       else if (path.startsWith("/delete/")) response = await deleteImage(path.split("/")[2], request, env);
       else if (path.startsWith("/download/")) response = await downloadImage(path.split("/")[2], env);
       else response = new Response("API OK", { status: 200 });
@@ -283,6 +284,68 @@ async function rawImage(id, env) {
       headers: { "Content-Type": contentType, "Cache-Control": "public,max-age=86400" }
     });
   } catch(e) { return new Response("Image load error", { status: 500 }); }
+}
+
+async function viewImage(id, request, env) {
+  const data = await env.IMG_KV.get(`img:${id}`);
+  if (!data) return new Response("Not found", { status: 404 });
+
+  try {
+    const meta = JSON.parse(data);
+    const filename = meta.filename || 'image.jpg';
+    const rawUrl = `${new URL(request.url).origin}/raw/${id}`;
+    const viewUrl = `${new URL(request.url).origin}/view/${id}`;
+    const siteName = 'Pichost';
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(filename)} — ${siteName}</title>
+<meta name="description" content="Image shared via Pichost — free, serverless image hosting.">
+<meta property="og:title" content="${escapeHtml(filename)}">
+<meta property="og:description" content="Image shared via Pichost.">
+<meta property="og:image" content="${rawUrl}">
+<meta property="og:url" content="${viewUrl}">
+<meta property="og:site_name" content="${siteName}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${rawUrl}">
+<link rel="canonical" href="${viewUrl}">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #030712; color: #f9fafb; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+img { max-width: 100%; max-height: 85vh; border-radius: 0.75rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.info { margin-top: 1.5rem; text-align: center; }
+h1 { font-size: 1.125rem; font-weight: 600; color: #e5e7eb; }
+p { font-size: 0.875rem; color: #9ca3af; margin-top: 0.25rem; }
+a { color: #60a5fa; text-decoration: none; }
+a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<img src="${rawUrl}" alt="${escapeHtml(filename)}">
+<div class="info">
+<h1>${escapeHtml(filename)}</h1>
+<p>Hosted on <a href="https://github.com/angel2rider/PicHost">Pichost</a></p>
+</div>
+</body>
+</html>`;
+
+    return new Response(html, {
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "public, max-age=3600"
+      }
+    });
+  } catch(e) {
+    return new Response("Error loading image", { status: 500 });
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 async function deleteImage(id, request, env) {
