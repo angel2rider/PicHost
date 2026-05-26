@@ -84,6 +84,15 @@
             .gallery-overlay { transition: none !important; }
             .gallery-actions { transition: none !important; }
             .gallery-item:hover .gallery-actions { transform: translateY(0); }
+            .navbar { animation: none !important; }
+            .dropzone:hover .dropzone-icon { animation: none; }
+            .auth-icon-wrapper { animation: none; box-shadow: none; }
+            .btn-primary:active, .btn-icon:active, .btn-outline:active, .gallery-action-btn:active, .tab-btn:active, .color-btn:active { transform: none !important; }
+            .dropdown-menu.show { animation: none !important; }
+            .toast.show { animation: none !important; }
+            .settings-grid .card { opacity: 1 !important; animation: none !important; }
+            footer { animation: none !important; }
+            .progress-item { animation: none !important; }
         }
 
         /* Navbar */
@@ -146,7 +155,7 @@
         .gallery-action-btn:hover { background-color: rgb(var(--brand-rgb)); }
         .gallery-action-btn.delete:hover { background-color: var(--danger); }
 
-        .skeleton { position: absolute; inset: 0; background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%); background-size: 200% 100%; animation: skeletonLoading 1.5s infinite; border-radius: 1rem; }
+        .skeleton { position: absolute; inset: 0; background: linear-gradient(110deg, var(--border) 28%, var(--bg) 50%, var(--border) 72%); background-size: 200% 100%; animation: skeletonLoading 1.2s ease-in-out infinite; border-radius: 1rem; will-change: background-position; }
         .skeleton-hidden { display: none; }
         @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
@@ -181,6 +190,108 @@
         .modal-overlay.show { display: flex; opacity: 1; }
         .modal-content { transform: scale(0.95); transition: 0.3s; }
         .modal-overlay.show .modal-content { transform: scale(1); }
+
+        /* =========================================================
+           POLISHED ANIMATIONS (GPU-optimized, PageSpeed-safe)
+           Only transform/opacity — no layout thrashing
+           ========================================================= */
+
+        /* Smooth document scroll (accessibility-friendly) */
+        html { scroll-behavior: smooth; }
+
+        /* Navbar slides down on page load */
+        .navbar {
+            animation: slideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Subtle press feedback on all interactive elements */
+        .btn-primary:active { transform: scale(0.97); }
+        .btn-icon:active { transform: scale(0.9); }
+        .btn-outline:active { transform: scale(0.97); }
+        .gallery-action-btn:active { transform: scale(0.88); }
+        .tab-btn:active { transform: scale(0.95); }
+        .color-btn:active { transform: scale(0.9); }
+        .profile-btn:active { transform: scale(0.92); }
+
+        /* Enhanced toast with bouncy entrance */
+        .toast.show {
+            animation: toastBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        /* Profile dropdown — smooth drop-in */
+        .dropdown-menu.show {
+            animation: dropdownIn 0.15s ease-out both;
+            transform-origin: top right;
+        }
+
+        /* Auth icon — subtle pulsing glow */
+        .auth-icon-wrapper {
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        /* Dropzone icon — gentle float on hover */
+        .dropzone:hover .dropzone-icon {
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Gallery — GPU layer promotion for jank-free hover */
+        .gallery-item {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.06) translateZ(0);
+        }
+
+        /* Footer fades in after page settles */
+        footer {
+            animation: fadeInUp 0.5s ease 0.3s both;
+        }
+
+        /* Settings cards — staggered reveal */
+        .settings-grid .card {
+            opacity: 0;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .settings-grid .card:nth-child(1) { animation-delay: 0s; }
+        .settings-grid .card:nth-child(2) { animation-delay: 0.1s; }
+        .settings-grid .card:nth-child(3) { animation-delay: 0.2s; }
+
+        /* Upload progress items — slide in from below */
+        .progress-item {
+            animation: fadeSlideIn 0.3s ease both;
+        }
+
+        /* KEYFRAMES */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-100%); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes toastBounce {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.9); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+        }
+
+        @keyframes dropdownIn {
+            from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(var(--brand-rgb), 0.3); }
+            50%      { box-shadow: 0 0 0 6px rgba(var(--brand-rgb), 0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-5px); }
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
