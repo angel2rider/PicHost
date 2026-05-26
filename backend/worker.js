@@ -1,10 +1,7 @@
 /**
  * CLOUDFLARE WORKER: Pichost Backend (Now with Google Auth)
- * 
- * Auto-deployed via GitHub Actions (see .github/workflows/deploy-worker.yml)
  */
 
-// GitHub Actions deploys this worker on backend/ changes only
 const getCorsHeaders = (request) => {
   const origin = request.headers.get("Origin") || "http://localhost";
   return {
