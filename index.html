@@ -313,8 +313,8 @@
             animation: confettiFall var(--dur, 1s) ease-out var(--del, 0s) forwards;
         }
         @keyframes confettiFall {
-            0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
-            100% { opacity: 0; transform: translateY(400px) rotate(720deg) scale(0.3); }
+            0%   { opacity: 1; transform: translateX(var(--x,0)) translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateX(var(--x,0)) translateY(400px) rotate(720deg) scale(0.3); }
         }
     </style>
 </head>
@@ -975,7 +975,7 @@
                     var del = Math.random() * 0.3;
                     // Mix squares and circles
                     var rad = Math.random() > 0.5 ? '50%' : '1px';
-                    p.style.cssText = 'width:'+size+'px;height:'+size+'px;background:'+color+';border-radius:'+rad+';transform:translateX('+x+'px);--dur:'+dur+'s;--del:'+del+'s';
+                    p.style.cssText = 'width:'+size+'px;height:'+size+'px;background:'+color+';border-radius:'+rad+';--x:'+x+'px;--dur:'+dur+'s;--del:'+del+'s';
                     container.appendChild(p);
                 }
                 document.body.appendChild(container);
