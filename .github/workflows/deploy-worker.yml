@@ -16,13 +16,9 @@ jobs:
         working-directory: backend
     steps:
       - uses: actions/checkout@v4
-      - name: Install latest Wrangler
-        run: npm i -g wrangler@latest
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: backend
           wranglerVersion: "4"
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
