@@ -425,6 +425,19 @@
                 if (el) el.href = svg;
             };
 
+            window._modalIndex = -1;
+
+            window.timeAgo = function(ts) {
+                if (!ts) return '';
+                var diff = Math.floor((Date.now() - ts) / 1000);
+                if (diff < 60) return 'just now';
+                if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+                if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+                if (diff < 2592000) return Math.floor(diff / 86400) + 'd ago';
+                var d = new Date(ts);
+                return (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
+            };
+
             window.STATE = {
                 worker: localStorage.getItem('worker_url') || DEFAULT_WORKER,
                 images: [],
@@ -477,7 +490,7 @@
                 if (!toast) return;
                 toast.className = 'toast ' + (type === 'error' ? 'error' : 'success');
                 var icon = document.getElementById('toast-icon');
-                if (icon) icon.setAttribute('data-lucide', type === 'error' ? 'alert-circle' : 'check-circle-2');
+                if (icon) icon.setAttribute('data-lucide', type === 'error' ? 'alert-circle' : 'check-circle');
                 var msgEl = document.getElementById('toast-msg');
                 if (msgEl) msgEl.innerText = msg;
                 if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
@@ -679,10 +692,16 @@
 
                 gal.innerHTML = window.STATE.images.map(function(img, i) {
                     var src = window.STATE.worker + img.raw;
+                    var fname = img.filename || 'image.jpg';
+                    var ts = window.timeAgo(img.timestamp);
                     return '<div class="gallery-item" style="animation-delay: ' + (i * 30) + 'ms">' +
                         '<div class="skeleton"></div>' +
-                        '<img src="' + src + '" class="gallery-img" loading="lazy" decoding="async" alt="Gallery image ' + (i + 1) + '" onload="this.style.opacity=1; var sk=this.previousElementSibling; if(sk) sk.classList.add(\'skeleton-hidden\')" onerror="this.style.opacity=1; this.alt=\'Failed to load image\'; var sk=this.previousElementSibling; if(sk) sk.classList.add(\'skeleton-hidden\')">' +
+                        '<img src="' + src + '" class="gallery-img" loading="lazy" decoding="async" alt="' + fname.replace(/"/g, '&quot;') + '" onload="this.style.opacity=1; var sk=this.previousElementSibling; if(sk) sk.classList.add(\'skeleton-hidden\')" onerror="this.style.opacity=1; this.alt=\'Failed to load image\'; var sk=this.previousElementSibling; if(sk) sk.classList.add(\'skeleton-hidden\')">' +
                         '<div class="gallery-overlay">' +
+                            '<div style="padding: 0 0 0.5rem 0;">' +
+                                '<p class="truncate" style="font-size: 0.75rem; color: rgba(255,255,255,0.95);">' + window.escapeHtml(fname) + '</p>' +
+                                (ts ? '<p style="font-size: 0.625rem; color: rgba(255,255,255,0.5); margin-top: 0.125rem;">' + ts + '</p>' : '') +
+                            '</div>' +
                             '<div class="gallery-actions">' +
                                 '<button onclick="window.viewFull(' + i + ')" class="gallery-action-btn" aria-label="View full size"><i data-lucide="maximize-2" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
                                 '<button onclick="event.stopPropagation(); window.copyLink(\'' + src + '\')" class="gallery-action-btn" aria-label="Copy image link"><i data-lucide="link" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
@@ -695,10 +714,11 @@
             };
 
             window.viewFull = function(i) {
+                window._modalIndex = i;
                 var modalImg = document.getElementById('modal-img');
                 if (!modalImg || !window.STATE.images[i]) return;
                 modalImg.src = window.STATE.worker + window.STATE.images[i].raw;
-                modalImg.alt = 'Full size gallery image ' + (i + 1);
+                modalImg.alt = window.STATE.images[i].filename || 'Full size image';
                 document.getElementById('modal').classList.add('show');
             };
 
@@ -746,7 +766,7 @@
                     '<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">' +
                         '<div style="padding: 0.5rem; background-color: rgba(var(--brand-rgb), 0.1); color: rgb(var(--brand-rgb)); border-radius: 0.5rem;"><i data-lucide="image" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></div>' +
                         '<div class="truncate" style="flex: 1; font-size: 0.875rem; font-weight: 500;">' + window.escapeHtml(file.name) + '</div>' +
-                        '<i data-lucide="loader-2" class="animate-spin" style="color: rgb(var(--brand-rgb)); width: 1rem; height: 1rem;" aria-hidden="true"></i>' +
+                        '<i data-lucide="loader" class="animate-spin" style="color: rgb(var(--brand-rgb)); width: 1rem; height: 1rem;" aria-hidden="true"></i>' +
                     '</div>' +
                     '<div style="width: 100%; background-color: var(--border); border-radius: 9999px; height: 0.375rem; overflow: hidden;">' +
                         '<div id="fill-' + rid + '" style="height: 100%; background-color: rgb(var(--brand-rgb)); width: 0%; transition: 0.2s;"></div>' +
@@ -835,7 +855,7 @@
                 });
             }
 
-            // Close modals on Escape
+            // Close modals on Escape, navigate images with arrows
             window.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     var imgModal = document.getElementById('modal');
@@ -845,6 +865,15 @@
                     var settingsModal = document.getElementById('pre-settings-modal');
                     if (settingsModal && settingsModal.classList.contains('show')) {
                         settingsModal.classList.remove('show');
+                    }
+                }
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    var imgModal = document.getElementById('modal');
+                    if (!imgModal || !imgModal.classList.contains('show')) return;
+                    var dir = e.key === 'ArrowLeft' ? -1 : 1;
+                    var newIdx = (window._modalIndex || 0) + dir;
+                    if (newIdx >= 0 && newIdx < window.STATE.images.length) {
+                        window.viewFull(newIdx);
                     }
                 }
             }, { passive: true });
@@ -870,14 +899,7 @@
             // Close dropdowns on body click
             document.body.addEventListener('click', window.closeDropdowns, { passive: true });
 
-            // Register service worker for static asset caching
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                        console.warn('SW registration failed:', err);
-                    });
-                });
-            }
+
 
         })();
     </script>

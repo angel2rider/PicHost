@@ -218,11 +218,12 @@ async function uploadImage(request, env) {
     await env.IMG_KV.put(`img:${id}`, JSON.stringify({
       file_id: tgData.result.photo.pop().file_id,
       message_id: tgData.result.message_id,
+      filename: file.name,
       owner: user,
       uploaded: Date.now()
     }));
 
-    return new Response(JSON.stringify({ id, raw: `/raw/${id}` }), {
+    return new Response(JSON.stringify({ id, raw: `/raw/${id}`, filename: file.name, timestamp: Date.now() }), {
       headers: { "Content-Type": "application/json" }
     });
   } catch(e) {
@@ -245,7 +246,7 @@ async function listImages(request, env) {
           const meta = JSON.parse(data);
           if (meta.owner === user) {
             const id = key.name.replace("img:", "");
-            results.push({ id, raw: `/raw/${id}`, timestamp: meta.uploaded });
+            results.push({ id, raw: `/raw/${id}`, filename: meta.filename || 'image.jpg', timestamp: meta.uploaded });
           }
         } catch(e) {}
       }
