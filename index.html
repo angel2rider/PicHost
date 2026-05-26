@@ -592,19 +592,6 @@
                 user: null
             };
 
-            // --- BOOTSTRAP THEME ---
-            // Apply theme before any paint to avoid flash
-            var _isDark = localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (_isDark) document.documentElement.classList.add('dark');
-            var sc = localStorage.getItem('theme_color') || 'ocean';
-            if (THEMES[sc]) window.applyTheme(sc, _isDark);
-            window.updateFavicon(sc);
-            // Mark the active theme button
-            var _btns = document.querySelectorAll('.theme-btn');
-            for (var _bi = 0; _bi < _btns.length; _bi++) {
-                _btns[_bi].classList.toggle('active', _btns[_bi].getAttribute('data-theme') === sc);
-            }
-
             // --- GLOBAL ERROR HANDLER ---
             window.addEventListener('unhandledrejection', function(e) {
                 console.warn('Unhandled Promise rejection:', e.reason);
@@ -828,6 +815,19 @@
                     btns[bi].classList.toggle('active', btns[bi].getAttribute('data-theme') === c);
                 }
             };
+
+            // --- BOOTSTRAP THEME ---
+            // Apply theme before any paint to avoid flash
+            var _isDark = localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (_isDark) document.documentElement.classList.add('dark');
+            var sc = localStorage.getItem('theme_color') || 'ocean';
+            if (THEMES[sc]) window.applyTheme(sc, _isDark);
+            window.updateFavicon(sc);
+            // Mark the active theme button
+            var _btns = document.querySelectorAll('.theme-btn');
+            for (var _bi = 0; _bi < _btns.length; _bi++) {
+                _btns[_bi].classList.toggle('active', _btns[_bi].getAttribute('data-theme') === sc);
+            }
 
             window.openSettingsModal = function() {
                 document.getElementById('inp-pre-worker').value = window.STATE.worker;
