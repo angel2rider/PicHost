@@ -271,6 +271,12 @@ async function getTelegramURL(file_id, env) {
   return `https://api.telegram.org/file/bot${env.TELEGRAM_BOT_TOKEN}/${j.result.file_path}`;
 }
 
+function getImageContentType(filename) {
+  const ext = (filename || 'image.jpg').split('.').pop().toLowerCase();
+  const map = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', bmp: 'image/bmp', svg: 'image/svg+xml', avif: 'image/avif' };
+  return map[ext] || 'image/jpeg';
+}
+
 async function rawImage(id, env) {
   const data = await env.IMG_KV.get(`img:${id}`);
   if (!data) return new Response("Not found", { status: 404 });
@@ -279,7 +285,7 @@ async function rawImage(id, env) {
     const meta = JSON.parse(data);
     const url = await getTelegramURL(meta.file_id, env);
     const img = await fetch(url);
-    const contentType = img.headers.get("Content-Type") || "image/jpeg";
+    const contentType = getImageContentType(meta.filename);
     return new Response(img.body, {
       headers: { "Content-Type": contentType, "Cache-Control": "public,max-age=86400" }
     });
@@ -373,7 +379,7 @@ async function downloadImage(id, env) {
     const meta = JSON.parse(data);
     const url = await getTelegramURL(meta.file_id, env);
     const img = await fetch(url);
-    const contentType = img.headers.get("Content-Type") || "image/jpeg";
+    const contentType = getImageContentType(meta.filename);
     const filename = meta.filename || `Pichost_${id}.jpg`;
     return new Response(img.body, {
       headers: {
