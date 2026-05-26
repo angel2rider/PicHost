@@ -402,6 +402,18 @@
             const DEFAULT_WORKER = 'https://pichost.vivekpereiraalbert.workers.dev';
             const GOOGLE_CLIENT_ID = "563051437889-an1hf5tqn2u2cd9smms0o9v13rjnu428.apps.googleusercontent.com";
 
+            // --- FAVICON THEME ---
+            var FAVICON_SVG = 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'COLOR\' stroke-width=\'2.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'m14.31 8 5.74 9.94\'/><path d=\'M9.69 8h11.48\'/><path d=\'m7.38 12 5.74-9.94\'/><path d=\'M9.69 16 3.95 6.06\'/><path d=\'M14.31 16H2.83\'/><path d=\'m16.62 12-5.74 9.94\'/></svg>';
+            var THEME_COLORS = { blue: '#3b82f6', emerald: '#10b981', violet: '#8b5cf6', rose: '#f43f5e' };
+
+            window.updateFavicon = function(hexColor) {
+                var svg = FAVICON_SVG.replace('COLOR', hexColor.replace('#', '%23'));
+                var el = document.querySelector('link[rel="icon"]');
+                if (el) el.href = svg;
+                el = document.querySelector('link[rel="apple-touch-icon"]');
+                if (el) el.href = svg;
+            };
+
             window.STATE = {
                 worker: localStorage.getItem('worker_url') || DEFAULT_WORKER,
                 images: [],
@@ -415,6 +427,7 @@
             }
             var sc = localStorage.getItem('theme_color');
             if (sc) document.body.setAttribute('data-theme', sc);
+            window.updateFavicon(THEME_COLORS[sc] || THEME_COLORS.blue);
 
             // --- GLOBAL ERROR HANDLER ---
             window.addEventListener('unhandledrejection', function(e) {
@@ -614,6 +627,7 @@
             window.setThemeColor = function(c) {
                 document.body.setAttribute('data-theme', c);
                 localStorage.setItem('theme_color', c);
+                window.updateFavicon(THEME_COLORS[c] || THEME_COLORS.blue);
             };
 
             window.openSettingsModal = function() {
