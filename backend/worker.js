@@ -192,8 +192,6 @@ async function logout() {
   });
 }
 
-// ... (KEEP uploadImage, listImages, getTelegramURL, rawImage, deleteImage, downloadImage EXACTLY as they were previously)
-
 async function uploadImage(request, env) {
   const user = getSessionUser(request);
   if (!user) return new Response("Unauthorized", { status: 401 });
@@ -277,8 +275,9 @@ async function rawImage(id, env) {
     const meta = JSON.parse(data);
     const url = await getTelegramURL(meta.file_id, env);
     const img = await fetch(url);
+    const contentType = img.headers.get("Content-Type") || "image/jpeg";
     return new Response(img.body, {
-      headers: { "Content-Type": "image/jpeg", "Cache-Control": "public,max-age=86400" }
+      headers: { "Content-Type": contentType, "Cache-Control": "public,max-age=86400" }
     });
   } catch(e) { return new Response("Image load error", { status: 500 }); }
 }
@@ -308,8 +307,10 @@ async function downloadImage(id, env) {
     const meta = JSON.parse(data);
     const url = await getTelegramURL(meta.file_id, env);
     const img = await fetch(url);
+    const contentType = img.headers.get("Content-Type") || "image/jpeg";
+    const ext = contentType.split('/').pop() || 'jpg';
     return new Response(img.body, {
-      headers: { "Content-Disposition": `attachment; filename="Pichost_${id}.jpg"` }
+      headers: { "Content-Disposition": `attachment; filename="Pichost_${id}.${ext}"` }
     });
   } catch(e) { return new Response("Download failed", { status: 500 }); }
 }
