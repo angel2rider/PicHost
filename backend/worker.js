@@ -235,15 +235,18 @@ async function listImages(request, env) {
 
   try {
     const list = await env.IMG_KV.list({ prefix: "img:", limit: 1000 });
-    const results =[];
     
-    for (const key of list.keys) {
-      const data = await env.IMG_KV.get(key.name);
+    // Parallelize all KV reads (with per-item error handling)
+    const allData = await Promise.all(list.keys.map(key => env.IMG_KV.get(key.name).catch(() => null)));
+    
+    const results = [];
+    for (let i = 0; i < allData.length; i++) {
+      const data = allData[i];
       if (data) {
         try {
           const meta = JSON.parse(data);
           if (meta.owner === user) {
-            const id = key.name.replace("img:", "");
+            const id = list.keys[i].name.replace("img:", "");
             results.push({ id, raw: `/raw/${id}`, filename: meta.filename || 'image.jpg', timestamp: meta.uploaded });
           }
         } catch(e) {}
@@ -253,7 +256,7 @@ async function listImages(request, env) {
     results.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
     
     return new Response(JSON.stringify(results), {
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json", "Cache-Control": "private, max-age=5" }
     });
   } catch(e) {
     return new Response("Failed to fetch list", { status: 500 });
