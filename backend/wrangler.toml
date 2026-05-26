@@ -2,10 +2,6 @@ name = "pichost-backend"
 main = "worker.js"
 compatibility_date = "2026-03-10"
 
-[vars]
-TELEGRAM_BOT_TOKEN = "your_bot_token_here"
-TELEGRAM_CHAT_ID = "your_telegram_chat_id_here"
-
 [[kv_namespaces]]
 binding = "IMG_KV"
-id = "IMG_KV"
+id = "921d65a5c95d41e5b57a8564c0aa8941"
