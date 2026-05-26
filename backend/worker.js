@@ -1,5 +1,7 @@
 /**
  * CLOUDFLARE WORKER: Pichost Backend (Now with Google Auth)
+ * 
+ * Auto-deployed via GitHub Actions (see .github/workflows/deploy-worker.yml)
  */
 
 const getCorsHeaders = (request) => {
