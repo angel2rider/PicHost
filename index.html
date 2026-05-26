@@ -28,7 +28,7 @@
     <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Lucide Icons (pinned for cache stability) -->
-    <script src="https://unpkg.com/lucide@0.344.0" defer></script>
+    <script src="https://unpkg.com/lucide@0.344.0"></script>
 
     <style>
         /* =========================================================
@@ -652,23 +652,20 @@
                     return;
                 }
 
-                var html = '';
-                for (var i = 0; i < window.STATE.images.length; i++) {
-                    var img = window.STATE.images[i];
+                gal.innerHTML = window.STATE.images.map(function(img, i) {
                     var src = window.STATE.worker + img.raw;
-                    html += '<div class="gallery-item" style="animation-delay: ' + (i * 30) + 'ms">' +
+                    return '<div class="gallery-item" style="animation-delay: ' + (i * 30) + 'ms">' +
                         '<div class="skeleton"></div>' +
-                        '<img src="' + src + '" class="gallery-img" loading="lazy" decoding="async" alt="Gallery image ' + (i + 1) + '" onload="this.style.opacity=\\'1\\'; var sk = this.previousElementSibling; if(sk) sk.classList.add(\\'skeleton-hidden\\');" onerror="this.style.opacity=\\'1\\'; this.alt=\\'Failed to load image\\'; var sk = this.previousElementSibling; if(sk) sk.classList.add(\\'skeleton-hidden\\');">' +
+                        '<img src="' + src + '" class="gallery-img" loading="lazy" decoding="async" alt="Gallery image ' + (i + 1) + '" onload="this.style.opacity=1; var sk=this.previousElementSibling; if(sk) sk.classList.add(\'skeleton-hidden\')" onerror="this.style.opacity=1; this.alt=\'Failed to load image\'; var sk=this.previousElementSibling; if(sk) sk.classList.add(\'skeleton-hidden\')">' +
                         '<div class="gallery-overlay">' +
                             '<div class="gallery-actions">' +
                                 '<button onclick="window.viewFull(' + i + ')" class="gallery-action-btn" aria-label="View full size"><i data-lucide="maximize-2" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
-                                '<button onclick="event.stopPropagation(); window.copyLink(\\'' + src + '\\')" class="gallery-action-btn" aria-label="Copy image link"><i data-lucide="link" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
-                                '<button onclick="event.stopPropagation(); window.deleteImg(\\'' + img.id + '\\')" class="gallery-action-btn delete" aria-label="Delete image"><i data-lucide="trash-2" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
+                                '<button onclick="event.stopPropagation(); window.copyLink(\'' + src + '\')" class="gallery-action-btn" aria-label="Copy image link"><i data-lucide="link" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
+                                '<button onclick="event.stopPropagation(); window.deleteImg(\'' + img.id + '\')" class="gallery-action-btn delete" aria-label="Delete image"><i data-lucide="trash-2" style="width: 1rem; height: 1rem;" aria-hidden="true"></i></button>' +
                             '</div>' +
                         '</div>' +
                     '</div>';
-                }
-                gal.innerHTML = html;
+                }).join('');
                 if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
             };
 
