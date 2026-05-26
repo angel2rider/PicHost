@@ -730,8 +730,29 @@
                 });
             };
 
-            window.downloadImg = function(id) {
-                window.open(window.STATE.worker + '/download/' + id, '_blank');
+            window.downloadImg = async function(id) {
+                // Find the original filename from our images array
+                var fname = 'image';
+                for (var j = 0; j < window.STATE.images.length; j++) {
+                    if (window.STATE.images[j].id === id) {
+                        fname = window.STATE.images[j].filename || 'image';
+                        break;
+                    }
+                }
+                try {
+                    var resp = await fetch(window.STATE.worker + '/download/' + id, { credentials: 'include' });
+                    var blob = await resp.blob();
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = fname;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch(e) {
+                    window.showToast("Download failed", "error");
+                }
             };
 
             window.deleteImg = async function(id) {

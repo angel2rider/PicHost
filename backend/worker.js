@@ -308,9 +308,12 @@ async function downloadImage(id, env) {
     const url = await getTelegramURL(meta.file_id, env);
     const img = await fetch(url);
     const contentType = img.headers.get("Content-Type") || "image/jpeg";
-    const ext = contentType.split('/').pop() || 'jpg';
+    const filename = meta.filename || `Pichost_${id}.jpg`;
     return new Response(img.body, {
-      headers: { "Content-Disposition": `attachment; filename="Pichost_${id}.${ext}"` }
+      headers: {
+        "Content-Type": contentType,
+        "Content-Disposition": `attachment; filename="${filename}"`
+      }
     });
   } catch(e) { return new Response("Download failed", { status: 500 }); }
 }
