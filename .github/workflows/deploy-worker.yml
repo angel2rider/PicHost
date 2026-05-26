@@ -6,6 +6,7 @@ on:
     # Only run when backend files change — saves Cloudflare build quota
     paths:
       - 'backend/**'
+  workflow_dispatch:
 
 jobs:
   deploy:
