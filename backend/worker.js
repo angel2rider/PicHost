@@ -54,6 +54,10 @@ export default {
 
 function randomID() { return crypto.randomUUID().slice(0, 8); }
 
+function createSessionCookie(username) {
+  return `session=${username}; Path=/; HttpOnly; Max-Age=31536000; Secure; SameSite=None`;
+}
+
 function getSessionUser(request) {
   const cookie = request.headers.get("Cookie") || "";
   const m = cookie.match(/session=([^;]+)/);
@@ -123,7 +127,7 @@ async function googleLogin(request, env) {
     return new Response(JSON.stringify({ success: true, email, picture, name }), {
       headers: {
         "Content-Type": "application/json",
-        "Set-Cookie": `session=${internalUsername}; Path=/; HttpOnly; Max-Age=86400; Secure; SameSite=None`
+        "Set-Cookie": createSessionCookie(internalUsername)
       }
     });
 
@@ -171,7 +175,7 @@ async function login(request, env) {
     return new Response(JSON.stringify({ success: true, username }), {
       headers: {
         "Content-Type": "application/json",
-        "Set-Cookie": `session=${username}; Path=/; HttpOnly; Max-Age=86400; Secure; SameSite=None`
+        "Set-Cookie": createSessionCookie(username)
       }
     });
   } catch(e) {
