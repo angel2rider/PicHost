@@ -93,6 +93,7 @@
             .settings-grid .card { opacity: 1 !important; animation: none !important; }
             footer { animation: none !important; }
             .progress-item { animation: none !important; }
+            .confetti-container { display: none !important; }
         }
 
         /* Navbar */
@@ -291,6 +292,29 @@
         @keyframes fadeSlideIn {
             from { opacity: 0; transform: translateY(8px); }
             to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Confetti celebration on upload success */
+        .confetti-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+        }
+        .confetti-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 1px;
+            opacity: 1;
+            animation: confettiFall var(--dur, 1s) ease-out var(--del, 0s) forwards;
+        }
+        @keyframes confettiFall {
+            0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(400px) rotate(720deg) scale(0.3); }
         }
     </style>
 </head>
@@ -916,6 +940,7 @@
                     }, 1000);
                     if (xhr.status === 200) {
                         window.showToast("Upload complete!");
+                        window.fireConfetti();
                         window.checkSession();
                     } else {
                         window.showToast("Upload failed", "error");
@@ -931,6 +956,30 @@
                 var fd = new FormData();
                 fd.append('file', file);
                 xhr.send(fd);
+            };
+
+            // --- CONFETTI CELEBRATION ---
+            window.fireConfetti = function() {
+                // Respect reduced motion
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                var colors = ['#3b82f6','#10b981','#f43f5e','#8b5cf6','#f59e0b','#06b6d4','#ec4899','#6366f1'];
+                var container = document.createElement('div');
+                container.className = 'confetti-container';
+                for (var ci = 0; ci < 50; ci++) {
+                    var p = document.createElement('div');
+                    p.className = 'confetti-particle';
+                    var color = colors[Math.floor(Math.random() * colors.length)];
+                    var x = (Math.random() - 0.5) * 300;
+                    var size = 5 + Math.random() * 7;
+                    var dur = 0.8 + Math.random() * 0.8;
+                    var del = Math.random() * 0.3;
+                    // Mix squares and circles
+                    var rad = Math.random() > 0.5 ? '50%' : '1px';
+                    p.style.cssText = 'width:'+size+'px;height:'+size+'px;background:'+color+';border-radius:'+rad+';transform:translateX('+x+'px);--dur:'+dur+'s;--del:'+del+'s';
+                    container.appendChild(p);
+                }
+                document.body.appendChild(container);
+                setTimeout(function() { container.remove(); }, 3000);
             };
 
             // Simple escape for filenames to prevent XSS
